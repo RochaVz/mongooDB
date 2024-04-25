@@ -1,5 +1,5 @@
 require("dotenv").config();
-const Database = require("@replit/database");
+//nconst Database = require("@replit/database");
 const dotenv = require("dotenv");
 dotenv.config({ path: "sample.env" });
 
@@ -32,7 +32,7 @@ var createAndSavePerson = function (done) {
       done(null, data);
     }
   });
-  
+};
 let arrayOfPeople = [
   {
     name: "Eduardo",
@@ -43,114 +43,118 @@ let arrayOfPeople = [
   { name: "Igor", age: 50, favoriteFoodks: ["rice"] },
 ];
 
-var createManyPeople = function(arrayOfPeople, done) {
-  
+var createManyPeople = function (arrayOfPeople, done) {
   Person.create(arrayOfPeople, (error, createdPeople) => {
-  if (error){
-    console.log(error);
-  }else{
-    done(null, createdPeople);
+    if (error) {
+      console.log(error);
+    } else {
+      done(null, createdPeople);
     }
   });
 };
 
-Person.find({name: "Eduardo"}, (error, data) =>{
-  if(error){
+Person.find({ name: "Eduardo" }, (error, data) => {
+  if (error) {
     console.log(error);
-  }else{
+  } else {
     console.log(data);
   }
 });
-var findPeopleByName = function(personName, done) {
-  Person.find({name: personName}, (error, arrayOfResults) => {
-    if(error){
+var findPeopleByName = function (personName, done) {
+  Person.find({ name: personName }, (error, arrayOfResults) => {
+    if (error) {
       console.log(error);
-    }else{
+    } else {
       done(null, arrayOfResults);
     }
   });
-
-var findOneByFood = function(food, done) {
-  Person.findOne({favoriteFoods: {$all : [food]}}, (error, result) => {
-    if(error){
+};
+var findOneByFood = function (food, done) {
+  Person.findOne({ favoriteFoods: { $all: [food] } }, (error, result) => {
+    if (error) {
       console.log(error);
-    }else{
+    } else {
       done(null, result);
     }
   });
 };
 
-var findPersonById = function(personId, done) {
+var findPersonById = function (personId, done) {
   Person.findById(personId, (error, data) => {
-    if(error){
+    if (error) {
       console.log(error);
-    }else{
+    } else {
       done(null, data);
     }
-  })
+  });
 };
 
-var findEditThenSave = function(personId, done) {
+var findEditThenSave = function (personId, done) {
   var foodToAdd = "hamburger";
   Person.findById(personId, (error, result) => {
-    if(error){
+    if (error) {
       console.log(error);
-    }else{
+    } else {
       result.favoriteFoods.push(foodToAdd);
       result.save((error, updatedResult) => {
-        if(error){
+        if (error) {
           console.log(error);
-        }else{
+        } else {
           done(null, updatedResult);
         }
       });
-    }  
-  });
- 
-var findAndUpdate = function(personName, done) {
-  var ageToSet = 20;
-  Person.findOneAndUpdate({name: personName}, {age: ageToSet}, {new: true},
-  (error, updatedRecord) => {
-    if(error){
-      console.log(error);
-    }else{
-      done(null, updatedRecord);
     }
-  })
+  });
 };
 
-var removeById = function(personId, done) {
-  Person.findByIdAndRemove(personId, (error, deletedRecord) => {
-    if(error){
-    }else{
-      done(null, deletedRecord);
+var findAndUpdate = function (personName, done) {
+  var ageToSet = 20;
+  Person.findOneAndUpdate(
+    { name: personName },
+    { age: ageToSet },
+    { new: true },
+    (error, updatedRecord) => {
+      if (error) {
+        console.log(error);
+      } else {
+        done(null, updatedRecord);
       }
-    });
-  };
+    },
+  );
+};
 
-var removeManyPeople = function(done) {
+var removeById = function (personId, done) {
+  Person.findByIdAndRemove(personId, (error, deletedRecord) => {
+    if (error) {
+    } else {
+      done(null, deletedRecord);
+    }
+  });
+};
+
+var removeManyPeople = function (done) {
   var nameToRemove = "Mary";
-  Person.remoeMany({name: nameToRemove}, (error, JSONStatus) => {
-    if(error){
+  Person.remove({ name: nameToRemove }, (error, JSONStatus) => {
+    if (error) {
       console.log(error);
-    }else{
+    } else {
       done(null, JSONStatus);
     }
   });
-  
-var queryChain = function(done)  {
+};
+var queryChain = function (done) {
   var foodToSearch = "burrito";
-  Person.find({favoriteFoods: {$all: [foodToSearch]}})
-  .sort({name: 'asc'})
-  .limit(2)
-  .select('-age')
-  .exec((error, filteredResults) => {
-    if(error){
-      console.log(error);
-    }else{
-      done(null, filteredResults);
-    }
-  })
+  Person.find({ favoriteFoods: { $all: [foodToSearch] } })
+    .sort({ name: "asc" })
+    .limit(2)
+    .select("-age")
+    .exec((error, filteredResults) => {
+      if (error) {
+        console.log(error);
+      } else {
+        done(null, filteredResults);
+      }
+    });
 };
 
 /** **Well Done !!**
@@ -159,7 +163,7 @@ var queryChain = function(done)  {
 
 //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 
-exports.PersonModel = person;
+exports.PersonModel = Person;
 exports.createAndSavePerson = createAndSavePerson;
 exports.findPeopleByName = findPeopleByName;
 exports.findOneByFood = findOneByFood;
